@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registro de Guitarras</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Formulario de Registro de Guitarras</h1>
+
+    <div id="error-message" class="error"></div>
+
+    <form id="guitar-form">
+      <input type="text" id="brand" name="brand" placeholder="Marca" required>
+      <input type="text" id="model" name="model" placeholder="Modelo" required>
+      <input type="number" id="year" name="year" placeholder="Año" required>
+      <input type="text" id="type" name="type" placeholder="Tipo" required>
+      <input type="text" id="color" name="color" placeholder="Color" required>
+      <input type="number" id="price" name="price" placeholder="Precio" required>
+      <input type="text" id="description" name="description" placeholder="Descripción" required>
+      <input type="text" id="serial" name="serial" placeholder="Número de serie" required>
+      <button type="submit">Registrar Guitarra</button>
+    </form>
+
+    <h2>Guitarras Registradas</h2>
+    <ul id="guitar-list"></ul>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
