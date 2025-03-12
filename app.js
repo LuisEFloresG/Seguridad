@@ -20,23 +20,77 @@ app.use(bodyParser.urlencoded({
 app.use(express.static('public'))
 
 app.post('/agregarUsuario', (req, res) => {
-    let GUITARRA = req.body.GUITARRA
-    let id = req.body.id
-    let MARCA = req.body.MARCA
-    let MODELO = req.body.MODELO
-    let AÑO = req.body.AÑO
-    let DISEÑO = req.body.DISEÑO
-    let COLOR = req.body.COLOR
-    let ESTILO = req.body.ESTILO
-    let TIPO = req.body.TIPO
 
-    con.query('INSERT INTO usuario (id, GUITARRA, MARCA, MODELO, AÑO, DISEÑO, COLOR, ESTILO, TIPO) VALUES (?, ?, ?, ?, ?, ? , ?, ?, ?)', [id, GUITARRA, MARCA, MODELO, AÑO, DISEÑO, COLOR, ESTILO, TIPO], (err, respuesta, fields) => {
+    const camposRequeridos = ['GUITARRA', 'MARCA', 'MODELO', 'AÑO', 'DISEÑO', 'COLOR', 'ESTILO', 'TIPO'];
+    const camposFaltantes = camposRequeridos.filter(campo => !req.body[campo]);
+
+    if (camposFaltantes.length > 0) {
+        return res.status(400).send(`Faltan los siguientes campos: ${camposFaltantes.join(', ')}`);
+    }
+
+    const id = req.body.id;
+    const AÑO = req.body.AÑO;
+    const GUITARRA = req.body.GUITARRA;
+    const MARCA = req.body.MARCA;
+    const MODELO = req.body.MODELO;
+    const DISEÑO = req.body.DISEÑO;
+    const COLOR = req.body.COLOR;
+    const ESTILO = req.body.ESTILO;
+    const TIPO = req.body.TIPO;
+
+
+    if (isNaN(AÑO) || AÑO < 1900 || AÑO > new Date().getFullYear() + 1) {
+        return res.status(400).send('El año debe ser un número válido entre 1900 y ' + (new Date().getFullYear() + 1));
+    }
+
+
+    const validarLongitud = (valor, nombreCampo, max = 50) => {
+        if (valor.length > max) {
+            return res.status(400).send(`${nombreCampo} no puede exceder los ${max} caracteres`);
+        }
+        if (valor.trim() === '') {
+            return res.status(400).send(`${nombreCampo} no puede estar vacío`);
+        }
+    };
+
+    validarLongitud(GUITARRA, 'GUITARRA');
+    validarLongitud(MARCA, 'MARCA');
+    validarLongitud(MODELO, 'MODELO');
+    validarLongitud(DISEÑO, 'DISEÑO', 100);
+    validarLongitud(COLOR, 'COLOR');
+    validarLongitud(ESTILO, 'ESTILO');
+    validarLongitud(TIPO, 'TIPO');
+
+
+    const validarCaracteres = (valor, nombreCampo) => {
+        const regex = /[^a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\s]/gi;
+        if (regex.test(valor)) {
+            res.status(400).send(`${nombreCampo} solo permite letras, números y espacios`);
+            return true;
+        }
+        return false;
+    };
+
+    if (validarCaracteres(GUITARRA, 'GUITARRA')) return;
+    if (validarCaracteres(MARCA, 'MARCA')) return;
+    if (validarCaracteres(MODELO, 'MODELO')) return;
+    if (validarCaracteres(DISEÑO, 'DISEÑO')) return;
+    if (validarCaracteres(COLOR, 'COLOR')) return;
+    if (validarCaracteres(ESTILO, 'ESTILO')) return;
+    if (validarCaracteres(TIPO, 'TIPO')) return;
+
+   
+    con.query('INSERT INTO usuario ( GUITARRA, MARCA, MODELO, AÑO, DISEÑO, COLOR, ESTILO, TIPO) VALUES (?, ?, ?, ?, ? , ?, ?, ?)', 
+    [GUITARRA, MARCA, MODELO, AÑO, DISEÑO, COLOR, ESTILO, TIPO], 
+    (err, respuesta, fields) => {
+    
         if (err) {
             console.log("Error al conectar", err);
             return res.status(500).send("Error al conectar");
         }
 
         return res.send(`
+
            <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -72,7 +126,7 @@ app.post('/agregarUsuario', (req, res) => {
 <body>
     <div class="container">
         <div class="card shadow-lg p-4">
-            <h2 class="text-center text-primary mb-4">Información del Jugador</h2>
+            <h2 class="text-center text-primary mb-4">Información de la Guitarra</h2>
             <ul class="list-group">
                 <li class="list-group-item"><strong>Guitarra:</strong> ${GUITARRA}</li>
                 <li class="list-group-item"><strong>Marca:</strong> ${MARCA}</li>
@@ -111,37 +165,6 @@ app.get('/obtenerUsuario', (req, res) => {
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Lista de Guitarras</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body {
-            background: linear-gradient(to right, #f8f9fa, #e9ecef);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-        .card {
-            max-width: 700px;
-            border-radius: 15px;
-            border: none;
-            background: white;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        }
-        .list-group-item {
-            border: none;
-            background-color: rgba(0, 0, 0, 0.05);
-            border-radius: 10px;
-            margin-bottom: 8px;
-            padding: 12px;
-        }
-        .btn {
-            border-radius: 20px;
-            padding: 8px 14px;
-        }
-        .form-control-sm {
-            border-radius: 10px;
-        }
-    </style>
 </head>
 <body>
     <div class="container">
@@ -181,11 +204,7 @@ app.get('/obtenerUsuario', (req, res) => {
                 <div>
                     <strong>ID:</strong> ${usuario.id} | <strong>Guitarra:</strong> ${usuario.GUITARRA}
                 </div>
-                <div class="d-flex">
-                    <form action="/editarUsuario/${usuario.id}" method="post" class="me-2 d-flex">
-                        <input type="text" name="nombre" value="${usuario.GUITARRA}" class="form-control form-control-sm me-2" required>
-                        <button type="submit" class="btn btn-warning btn-sm">Editar</button>
-                    </form>
+
                     <form action="/eliminarUsuario/${usuario.id}" method="post">
                         <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
                     </form>
@@ -193,17 +212,7 @@ app.get('/obtenerUsuario', (req, res) => {
             </li>`;
     });
     
-    respuestaHTML += `
-                    </ul>
-                    <div class="text-center mt-4">
-                        <a href="/" class="btn btn-primary">Volver al Inicio</a>
-                    </div>
-                </div>
-            </div>
-            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-        </body>
-        </html>
-    `;  
+    respuestaHTML += ``;  
     
         respuestaHTML += "</ul>";
 
@@ -246,6 +255,6 @@ app.post('/editarUsuario/:id', (req, res) => {
     });
 });
 
-app.listen(3000, () => {
+app.listen(3015, () => {
     console.log('Servidor escuchando en el puerto 3000')
 })
