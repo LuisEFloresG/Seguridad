@@ -1,6 +1,0 @@
-Para poder ejecutar el proyecto es necesario:
-
-1. Ejecutar en CMD desde la carpeta del proyecto el comando "npm init -y"
-2. Ejecturar después de el primer paso "npm install express cors body-parser"
-3. Una vez que se ejecute comprobar con "node server.js" que el servidor esté
-siendo ejecutado de manera correcta en el puerto 5000.

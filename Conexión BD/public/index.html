@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Formulario de Jugador</title>
+    <style>
+        body {
+            background-color: rgb(255, 255, 255);
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .form-container {
+            background-color: #ffefd4;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(216, 216, 216, 0.1);
+            padding: 20px;
+            width: 100%;
+            max-width: 800px;
+        }
+
+        h2 {
+            font-size: 2rem;
+            text-align: center;
+            color: #000000;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-size: 1rem;
+            font-weight: bold;
+            color: #333;
+        }
+
+        input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            font-size: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            margin-top: 5px;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus, input[type="number"]:focus {
+            border-color: #b8dbff;
+            outline: none;
+            box-shadow: 0 0 5px rgba(38, 143, 255, 0.5);
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            font-size: 1.1rem;
+            color: white;
+            background-color: #1ec06f;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #218853;
+        }
+
+        .footer-btns {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .footer-btns a {
+            text-decoration: none;
+            background-color: #f39110;
+            padding: 10px 20px;
+            border-radius: 8px;
+            color: white;
+            font-size: 1rem;
+            text-align: center;
+            transition: background-color 0.3s;
+        }
+
+        .footer-btns a:hover {
+            background-color: #edff9c;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="form-container">
+        <h2>Registro de Guitarras</h2>
+        <form action="/agregarUsuario" method="post" onsubmit="return validarFormulario(event)">
+            <div class="form-group">
+                <label for="nombre">Guitarra</label>
+                <input type="text" id="guitarra" name="GUITARRA" placeholder="Que guitarra tienes">
+            </div>
+            <div class="form-group">
+                <label for="pais">Marca</label>
+                <input type="text" id="marca" name="MARCA" placeholder="Que marca es">
+            </div>
+            <div class="form-group">
+                <label for="numero">Año</label>
+                <input type="number" id="año" name="AÑO" placeholder="De que año es" min="0" max="2000">
+            </div>
+            <div class="form-group">
+                <label for="equipo">Modelo</label>
+                <input type="text" id="modelo" name="MODELO" placeholder="Que modelo es">
+            </div>
+            <div class="form-group">
+                <label for="costo">Diseño</label>
+                <input type="text" id="diseño" name="DISEÑO" placeholder="Cual es el diseño">
+            </div>
+            <div class="form-group">
+                <label for="venta">Color</label>
+                <input type="text" id="color" name="COLOR" placeholder="Que color es">
+            </div>
+            <div class="form-group">
+                <label for="reside">Estilo</label>
+                <input type="text" id="estilo" name="ESTILO" placeholder="Que es estilo es">
+            </div>
+            <div class="form-group">
+                <label for="goles">Tipo</label>
+                <input type="texto" id="tipo" name="TIPO" placeholder="Que tipo es">
+            </div>
+            <button type="submit">Agregar Guitarra</button>
+        </form>
+
+        <div class="footer-btns">
+            <a href="/obtenerUsuario">Obtener Guitarra</a>
+        </div>
+    </div>
+
+</body>
+</html>
